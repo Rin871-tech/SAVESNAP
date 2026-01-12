@@ -1,0 +1,12 @@
+firebase_key.json
+__pycache__/
+venv/
+.env
+.savesnap/
+*.exe
+*.apk
+*.zip
+*.rar
+*.msi
+*.pdf
+*.dwg
