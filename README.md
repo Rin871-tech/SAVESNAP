@@ -1,256 +1,218 @@
-🚀 SaveSnap — Smart Code & Data Snapshot Manager
+# 💾 SaveSnap
 
-SaveSnap is a lightweight, developer-first CLI tool that captures, stores, and syncs project snapshots seamlessly across local storage, cloud databases, and educational environments — all from a single command.
+> A lightweight local version control and snapshot management system for students and beginner developers.
 
-Built for hackathons, students, and developers, SaveSnap eliminates the chaos of scattered files, lost experiments, and forgotten progress.
+---
 
-🌟 Why SaveSnap?
+## 📌 What is SaveSnap?
 
-Developers often struggle with:
+SaveSnap is a beginner-friendly alternative to Git that allows users to save, manage, and restore snapshots of their project files using simple command-line commands. It works completely offline and stores all data locally — no internet required.
 
-Losing important experiment states
+It also features **n8n cloud automation** that sends email notifications and logs every commit to Google Sheets automatically.
 
-Managing multiple versions of the same project
+---
 
-Syncing progress across devices
+## 🚀 Features
 
-Saving educational experiments for later reuse
+- 📁 Initialize a local project repository
+- 💾 Save snapshots (commits) of your files
+- 📜 View full commit history
+- ⏪ Restore previous versions easily
+- 🔁 Undo a restore if needed
+- 🎓 Education mode with interactive Google Colab notebooks
+- 🔔 **n8n Automation:** Email notification on every commit
+- 📊 **n8n Automation:** Auto-log commits to Google Sheets
+- ☁️ Optional Firebase cloud sync
 
-SaveSnap solves this with a unified snapshot system — simple, fast, and reliable.
+---
 
-🧠 Key Features
-🔹 Unified Snapshot System
+## 🛠️ Technology Stack
 
-Save project states instantly with metadata, timestamps, and notes.
+| Layer | Technology |
+|---|---|
+| Frontend | Command Line Interface (CLI) |
+| Backend | Python |
+| Database | Local File System |
+| Automation | n8n (Webhook + Gmail + Google Sheets) |
+| Cloud Sync | Firebase Firestore (Optional) |
+| Platform | Windows / Linux / macOS |
 
-🔹 Multi-Storage Support
+---
 
-📁 Local Repository – Offline access
+## 📦 Installation
 
-☁️ Cloud Firestore – Persistent & synchronized storage
+### 1. Clone the repository
+```bash
+git clone https://github.com/Rin871-tech/SAVESNAP.git
+cd SAVESNAP
+```
 
-🎓 Google Colab (Edu Mode) – Save learning experiments effortlessly
+### 2. Create and activate virtual environment
 
-🔹 CLI-First Design
+**Mac/Linux:**
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
-No heavy UI. No distractions. Just productivity.
+**Windows:**
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
 
-🔹 Educational Mode
+### 3. Install dependencies
+```bash
+pip install requests
+```
 
-Perfect for students saving:
+### 4. (Optional) Install Firebase
+```bash
+pip install firebase-admin
+```
 
-Assignments
+---
 
-Experiments
+## 💻 Commands
 
-ML notebooks
+### Initialize a repository
+```bash
+python3 savesnap.py init
+```
+Sets up a new SaveSnap repository in the current folder. Asks for your name and email for commit notifications.
+
+---
+
+### Save a snapshot (commit)
+```bash
+python3 savesnap.py commit "your commit message"
+```
+Saves a snapshot of all files in the current directory. Automatically triggers email notification and Google Sheets log via n8n.
+
+---
 
-Research drafts
+### View commit history
+```bash
+python3 savesnap.py log
+```
+Displays all previous commits with their IDs, timestamps, and messages.
 
-🏗️ System Architecture
-      +------------------+
-      |       User       |
-      +------------------+
-                |
-                v
-     +----------------------+
-     |  SaveSnap CLI (Python)|
-     +----------------------+
-      |        |         |
-      v        v         v
-+-----------+ +-----------+ +-----------------+
-| Local     | | Firebase  | | Google Colab    |
-| Repository| | Firestore | | (Edu Mode)      |
-+-----------+ +-----------+ +-----------------+
+---
 
+### Restore a previous version
+```bash
+python3 savesnap.py checkout <commit_id>
+```
+Restores your files to a previous snapshot. Example:
+```bash
+python3 savesnap.py checkout 2026-04-19_14-48-35
+```
+
+---
+
+### Undo a restore
+```bash
+python3 savesnap.py undo-checkout
+```
+Reverts back to the state before the last checkout.
 
-SaveSnap CLI acts as the intelligent control layer, routing snapshots to the desired storage backend.
+---
 
-🛠️ Tech Stack
-Component	Technology
-Language	Python 🐍
-CLI	argparse
-Cloud DB	Firebase Firestore
-Edu Platform	Google Colab
-Version Control	Git
-⚙️ Installation
-git clone https://github.com/your-username/savesnap.git
-cd savesnap
-pip install -r requirements.txt
+### Education mode
+```bash
+python3 savesnap.py edu
+```
+Opens interactive Google Colab notebooks explaining version control concepts like init, commit, checkout, and more.
 
-🚀 Usage
-Create a Snapshot
-python savesnap.py save --message "Initial experiment"
+---
 
-List Saved Snapshots
-python savesnap.py list
+## 🤖 n8n Automation
 
-Sync to Cloud
-python savesnap.py sync --cloud
+SaveSnap integrates with **n8n** to automate notifications and logging every time a commit is made.
 
-Enable Educational Mode
-python savesnap.py edu
+### How it works:
+```
+savesnap commit → Webhook → Gmail Notification
+                          → Google Sheets Log
+```
 
-🎯 Hackathon Impact
+### What gets sent:
+| Field | Description |
+|---|---|
+| Timestamp | When the commit was made |
+| User Name | Name entered during init |
+| User Email | Email entered during init |
+| Commit ID | Unique commit identifier |
+| Message | Commit message |
+| Files | List of files saved |
 
-✔️ Solves a real developer pain point
-✔️ Lightweight & scalable architecture
-✔️ Beginner-friendly yet powerful
-✔️ Perfect for education + development
-✔️ Ready for production expansion
+### Setup:
+1. Create an n8n account at [n8n.io](https://n8n.io)
+2. Create a new workflow with a **Webhook** node
+3. Add a **Gmail** node for email notifications
+4. Add a **Google Sheets** node for logging
+5. Copy your webhook URL and update `N8N_WEBHOOK_URL` in `savesnap.py`
 
-🔮 Future Roadmap
+---
 
-🔐 Snapshot encryption
+## ☁️ Firebase Setup (Optional)
 
-🖥️ Web dashboard
+1. Create a Firebase project at [firebase.google.com](https://firebase.google.com)
+2. Download your `firebase_key.json` credentials file
+3. Place it in the root of your SaveSnap folder
+4. Install firebase-admin: `pip install firebase-admin`
+5. Run SaveSnap — commits will automatically sync to Firestore
 
-🔄 Auto-sync scheduler
+---
 
-📊 Snapshot analytics
+## 📁 Project Structure
 
-🧠 AI-powered snapshot recommendations
+```
+SaveSnap/
+├── savesnap.py          # Main CLI script
+├── firebase_key.json    # Firebase credentials (optional)
+├── .savesnap/           # Repository folder (created on init)
+│   ├── config.json      # User configuration (name, email)
+│   ├── commit_log.txt   # Commit history
+│   └── commits/         # Snapshot folders
+│       └── commit_YYYY-MM-DD_HH-MM-SS/
+│           ├── metadata.txt
+│           └── (saved files)
+└── README.md
+```
 
-👥 Team & Credits
+---
 
-Built with ❤️ during a hackathon to empower developers and learners.
+## ⚠️ Show Stoppers / Limitations
 
-“Never lose progress again — Save it. Sync it. Snap it.”
+- Risk of data loss if restore is used incorrectly
+- Performance issues with very large files
+- User errors in command usage
+- Cross-platform file handling edge cases
 
-📜 License
+---
 
-MIT License — free to use, modify, and distribute.
+## 🎓 Education Mode
 
-If you want, I can also:
+SaveSnap includes an interactive education mode that opens Google Colab notebooks for learning version control concepts:
 
-✨ Add badges (GitHub stars, Python version, license)
+| Option | Topic |
+|---|---|
+| 1 | Initialization |
+| 2 | Commit + Hashing |
+| 3 | Checkout |
+| 4 | Undo Checkout |
+| 5 | Commit Logs |
 
-🎥 Write a demo script for judging
+---
 
-📊 Create a pitch slide version of this README
+## 👩‍💻 Author
 
-Just tell me 🔥
+**Vaishnavi Chavan**
+Built as part of ISE-II Project
 
-generate a poslished  readme file for this project
+---
 
-Below is a clean, professional, and polished README suitable for GitHub, college projects, and hackathons.
-It’s concise, impressive, and easy for evaluators to understand quickly.
+## 📄 License
 
-📸 SaveSnap
-A Unified Snapshot Manager for Developers & Learners
-
-SaveSnap is a Python-based Command Line Interface (CLI) tool that helps developers and students capture, store, and manage project snapshots effortlessly across local storage, cloud databases, and educational platforms.
-
-Whether you’re experimenting with code, working on assignments, or building projects, SaveSnap ensures your progress is never lost.
-
-🚀 Problem Statement
-
-Developers and students frequently face:
-
-Loss of important project states
-
-Poor version tracking outside Git commits
-
-Difficulty managing experiments across platforms
-
-No simple way to save educational work
-
-Traditional version control systems are powerful but not always ideal for quick snapshots and learning workflows.
-
-💡 Solution
-
-SaveSnap provides a simple snapshot-based approach that complements Git by allowing:
-
-Quick saves with descriptions
-
-Multiple storage backends
-
-Easy recovery of past states
-
-Educational-friendly workflows
-
-All controlled via a single CLI interface.
-
-✨ Features
-
-📁 Local Repository Storage – Save snapshots offline
-
-☁️ Cloud Sync (Firebase Firestore) – Secure and persistent storage
-
-🎓 Educational Mode (Google Colab) – Ideal for experiments and learning
-
-⚡ Fast CLI Commands – Minimal setup, maximum productivity
-
-🕒 Timestamped Snapshots – Track progress clearly
-
-🏗️ Architecture Overview
-User
- │
- ▼
-SaveSnap CLI (Python)
- │
- ├── Local Repository
- ├── Firebase Firestore
- └── Google Colab (Educational Mode)
-
-
-The SaveSnap CLI acts as the core controller, routing snapshot data to the appropriate backend.
-
-🛠️ Technology Stack
-Category	Technology
-Language	Python
-Interface	Command Line (CLI)
-Cloud Database	Firebase Firestore
-Educational Platform	Google Colab
-Version Control	Git
-⚙️ Installation
-git clone https://github.com/your-username/savesnap.git
-cd savesnap
-pip install -r requirements.txt
-
-▶️ Usage
-Save a Snapshot
-python savesnap.py save --message "My first snapshot"
-
-View Snapshots
-python savesnap.py list
-
-Sync with Cloud
-python savesnap.py sync
-
-Enable Educational Mode
-python savesnap.py edu
-
-🎯 Use Cases
-
-👨‍💻 Developers saving experimental code
-
-🎓 Students storing assignments and lab work
-
-📊 ML & Data Science experiments
-
-🧪 Research prototypes
-
-🏫 Academic project tracking
-
-🔮 Future Enhancements
-
-Snapshot encryption & authentication
-
-Web dashboard for snapshot browsing
-
-Auto-sync scheduling
-
-Snapshot comparison & analytics
-
-AI-based snapshot recommendations
-
-📜 License
-
-This project is licensed under the MIT License — free to use, modify, and distribute.
-
-❤️ Acknowledgments
-
-Built to simplify project management and encourage experimentation without fear of losing progress.
-
-Save your work. Sync your progress. Never lose a snapshot again.
+This project is for educational purposes.
